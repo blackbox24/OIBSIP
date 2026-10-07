@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unit Converter"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp" />
+    <!-- Category Label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Category"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Category Spinner -->
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp" />
+    <!-- Value Label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter Value"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Input Field -->
+    <EditText
+        android:id="@+id/editTextValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type a number"
+        android:inputType="numberDecimal"
+        android:layout_marginBottom="20dp" />
+
+    <!-- From Unit Label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="From Unit"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- From Unit Spinner -->
+    <Spinner
+        android:id="@+id/spinnerFrom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <!-- To Unit Label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="To Unit"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- To Unit Spinner -->
+    <Spinner
+        android:id="@+id/spinnerTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Convert Button -->
+    <Button
+        android:id="@+id/btnConvert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Convert"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Result Label -->
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Result" android:textSize="16sp" android:layout_marginBottom="4dp" />
+
+    <!-- Result TextView -->
+    <TextView
+        android:id="@+id/textViewResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="—"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="#E8E8E8" />
+</LinearLayout>
