@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 categories
         );
 
+        spinnerCategory.setAdapter(categoryAdapter);
+
         // Attach the adapter to the Category Spinner
         // When category changes, update the unit spinners
         spinnerCategory.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
@@ -85,6 +87,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please enter a valid number", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // FIX 2: Check if spinners actually have a selection to prevent crashes
+            if (spinnerFrom.getSelectedItem() == null || spinnerTo.getSelectedItem() == null) {
+                Toast.makeText(this, "Please select your units", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             // 4. Get selected units
             String fromUnit = spinnerFrom.getSelectedItem().toString();
@@ -117,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
 
         spinnerFrom.setAdapter(unitAdapter);
         spinnerTo.setAdapter(unitAdapter);
+
+        spinnerFrom.setSelection(0);
+        spinnerTo.setSelection(0);
     }
     private double convertValue(double value, String fromUnit, String toUnit, String category) {
 
