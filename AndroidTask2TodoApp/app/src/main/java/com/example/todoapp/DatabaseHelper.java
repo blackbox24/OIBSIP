@@ -31,6 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TASK_TITLE = "task_title";
     public static final String COLUMN_TASK_DESC = "task_description";
     public static final String COLUMN_TASK_USER_ID = "user_id"; // Foreign key mapping to users table
+    public static final String COLUMN_TASK_ISCOMPLETE = "is_complete";
 
     // Constructor: Tells Android OpenHelper to initialize our database file
     public DatabaseHelper(Context context) {
@@ -51,6 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_TASK_TITLE + " TEXT, "
                 + COLUMN_TASK_DESC + " TEXT, "
+                + COLUMN_TASK_ISCOMPLETE + "BOOLEAN DEFAULT false, "
                 + COLUMN_TASK_USER_ID + " INTEGER" + ")";
         db.execSQL(CREATE_TASKS_TABLE);
 
@@ -167,5 +169,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return taskList;
+    }
+
+    // Update an existing task
+    public boolean updateTask(int taskId, String title, String description) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TASK_TITLE, title);
+        values.put(COLUMN_TASK_DESC, description);
+
+        int rowsAffected = db.update(TABLE_TASKS, values, COLUMN_TASK_ID + " = ?", new String[]{String.valueOf(taskId)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    public boolean toggleTaskComplete(int taskId, boolean is_complete) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+//        values(COLUMN_TASK_ISCOMPLETE, is_complete);
+
+        int rowsAffected = db.update(TABLE_TASKS, values, COLUMN_TASK_ID + " = ?", new String[]{String.valueOf(taskId)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    // Delete a task by its ID
+    public boolean deleteTask(int taskId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(TABLE_TASKS, COLUMN_TASK_ID + " = ?", new String[]{String.valueOf(taskId)});
+        db.close();
+        return rowsAffected > 0;
     }
 }
