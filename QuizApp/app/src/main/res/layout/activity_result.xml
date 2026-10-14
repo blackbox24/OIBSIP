@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <!-- Results Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quiz Completed!"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Total Score Display -->
+    <TextView
+        android:id="@+id/tvFinalScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Final Score: 0 / 100"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Correct Count Display -->
+    <TextView
+        android:id="@+id/tvCorrectCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Correct Answers: 0"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_green_dark"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Incorrect Count Display -->
+    <TextView
+        android:id="@+id/tvIncorrectCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Incorrect Answers: 0"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_marginBottom="48dp" />
+
+    <!-- Restart Quiz Button -->
+    <Button
+        android:id="@+id/btnRestart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="14dp"
+        android:text="Restart Quiz"
+        android:textSize="16sp" />
+
+</LinearLayout>
