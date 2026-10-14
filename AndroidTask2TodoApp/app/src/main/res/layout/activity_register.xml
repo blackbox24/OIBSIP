@@ -7,15 +7,80 @@
     android:padding="24dp">
 
     <TextView
-        android:id="@+id/tvResultMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You have arrived at Registration Screen"
-        android:textSize="20sp"
-        android:layout_marginBottom="24dp" />
+        android:text="Create an Account"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- First + Last row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <EditText
+            android:id="@+id/etFirstName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="First Name"
+            android:inputType="textPersonName|textCapWords"
+            android:padding="14dp"
+            android:layout_marginEnd="8dp" />
+
+        <EditText
+            android:id="@+id/etLastName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Last Name"
+            android:inputType="textPersonName|textCapWords"
+            android:padding="14dp" />
+    </LinearLayout>
+
+    <!-- Middle Name stays full width -->
+
+    <EditText
+        android:id="@+id/etRegisterEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etRegisterUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:inputType="text"
+        android:padding="10dp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etRegisterPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etConfirmPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp" />
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnConfirmRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register"

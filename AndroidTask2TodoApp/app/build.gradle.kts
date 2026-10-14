@@ -34,6 +34,7 @@ android {
 
 dependencies {
     implementation(libs.appcompat)
+    implementation(libs.core)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
