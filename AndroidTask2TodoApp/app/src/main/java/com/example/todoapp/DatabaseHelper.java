@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 public class DatabaseHelper extends SQLiteOpenHelper {
     // 1. Database Configuration Constants
     private static final String DATABASE_NAME = "TodoApp.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // 2. Users Table Constants
     public static final String TABLE_USERS = "users";
@@ -24,6 +24,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PASSWORD = "password";
+
+    // Task Table Constants
+    public static final String TABLE_TASKS = "tasks";
+    public static final String COLUMN_TASK_ID = "task_id";
+    public static final String COLUMN_TASK_TITLE = "task_title";
+    public static final String COLUMN_TASK_DESC = "task_description";
+    public static final String COLUMN_TASK_USER_ID = "user_id"; // Foreign key mapping to users table
 
     // Constructor: Tells Android OpenHelper to initialize our database file
     public DatabaseHelper(Context context) {
@@ -39,6 +46,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_FIRST_NAME + " TEXT, "
                 + COLUMN_LAST_NAME + " TEXT, "
                 + COLUMN_PASSWORD + " TEXT" + ")";
+
+        String CREATE_TASKS_TABLE = "CREATE TABLE " + TABLE_TASKS + "("
+                + COLUMN_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COLUMN_TASK_TITLE + " TEXT, "
+                + COLUMN_TASK_DESC + " TEXT, "
+                + COLUMN_TASK_USER_ID + " INTEGER" + ")";
+        db.execSQL(CREATE_TASKS_TABLE);
 
         // Execute the SQL statement to create the table
         db.execSQL(CREATE_USERS_TABLE);
@@ -116,5 +130,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // If count > 0, a matching user was found!
         return cursorCount > 0;
+    }
+
+    public boolean addTask(String title, String description, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TASK_TITLE, title);
+        values.put(COLUMN_TASK_DESC, description);
+        values.put(COLUMN_TASK_USER_ID, userId);
+
+        long result = db.insert(TABLE_TASKS, null, values);
+        db.close();
+        return result != -1;
+    }
+
+    public java.util.List<Task> getAllTasksForUser(int userId) {
+        java.util.List<Task> taskList = new java.util.ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_TASKS,
+                null,
+                COLUMN_TASK_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)},
+                null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TASK_ID));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TASK_TITLE));
+                String desc = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TASK_DESC));
+
+                taskList.add(new Task(id, title, desc, userId));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return taskList;
     }
 }
