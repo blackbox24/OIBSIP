@@ -75,9 +75,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             recyclerViewTasks.setVisibility(android.view.View.VISIBLE);
             tvEmptyState.setVisibility(android.view.View.GONE);
-
-            // Pass click listener to adapter
-            taskAdapter = new TaskAdapter(taskList, task -> showTaskOptionsDialog(task));
+            taskAdapter = new TaskAdapter(taskList,
+                    task -> showTaskOptionsDialog(task),
+                    (task, isChecked) -> {
+                        databaseHelper.toggleTaskComplete(task.getId(), isChecked);
+                    }
+            );
             recyclerViewTasks.setAdapter(taskAdapter);
 
         }

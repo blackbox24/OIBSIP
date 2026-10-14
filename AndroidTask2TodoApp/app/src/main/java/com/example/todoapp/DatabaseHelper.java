@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_TASK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_TASK_TITLE + " TEXT, "
                 + COLUMN_TASK_DESC + " TEXT, "
-                + COLUMN_TASK_ISCOMPLETE + "BOOLEAN DEFAULT false, "
+                + COLUMN_TASK_ISCOMPLETE + " BOOLEAN DEFAULT false, "
                 + COLUMN_TASK_USER_ID + " INTEGER" + ")";
         db.execSQL(CREATE_TASKS_TABLE);
 
@@ -162,7 +162,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TASK_TITLE));
                 String desc = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TASK_DESC));
 
-                taskList.add(new Task(id, title, desc, userId));
+                boolean isComplete = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TASK_ISCOMPLETE)) == 1;
+                taskList.add(new Task(id, title, desc, userId, isComplete));
             } while (cursor.moveToNext());
         }
 
@@ -186,7 +187,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean toggleTaskComplete(int taskId, boolean is_complete) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-//        values(COLUMN_TASK_ISCOMPLETE, is_complete);
+        values.put(COLUMN_TASK_ISCOMPLETE, is_complete ? 1 : 0);
 
         int rowsAffected = db.update(TABLE_TASKS, values, COLUMN_TASK_ID + " = ?", new String[]{String.valueOf(taskId)});
         db.close();
