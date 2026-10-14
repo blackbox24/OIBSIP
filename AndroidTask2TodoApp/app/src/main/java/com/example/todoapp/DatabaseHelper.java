@@ -19,7 +19,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_ID = "id";
     public static final String COLUMN_USERNAME = "username";
 
-    public static final String COLUMN_FULLNAME = "fullname";
+    public static final String COLUMN_FIRST_NAME = "first_name";
+    public static final String COLUMN_LAST_NAME = "last_name";
 
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PASSWORD = "password";
@@ -35,7 +36,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_USERNAME + " TEXT UNIQUE, "
                 + COLUMN_EMAIL + " TEXT UNIQUE, "
-                + COLUMN_FULLNAME + " TEXT, "
+                + COLUMN_FIRST_NAME + " TEXT, "
+                + COLUMN_LAST_NAME + " TEXT, "
                 + COLUMN_PASSWORD + " TEXT" + ")";
 
         // Execute the SQL statement to create the table
@@ -69,13 +71,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // 6. Register User Method: Inserts a new row into the users table
-    public boolean registerUser(String username, String fullname, String email, String password) {
+    public boolean registerUser(String firstName, String lastName, String email, String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase(); // Get permission to write data
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_USERNAME, username);
         values.put(COLUMN_EMAIL, email);
-        values.put(COLUMN_FULLNAME, fullname);
+        values.put(COLUMN_FIRST_NAME, firstName);
+        values.put(COLUMN_LAST_NAME, lastName);
         values.put(COLUMN_PASSWORD, hashPassword(password)); // Store hash, not plain text!
 
         long result = db.insert(TABLE_USERS, null, values);
