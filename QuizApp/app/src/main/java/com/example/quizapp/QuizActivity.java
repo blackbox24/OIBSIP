@@ -4,22 +4,26 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
 
     TextView tvQuestionCounter, tvQuestionText;
-    Button[] optionButtons = new Button[4];
-    Button btnNext;
+    RadioGroup radioGroupOptions;
+    RadioButton[] radioButtons = new RadioButton[4];
+    Button btnSubmitNext;
 
     List<Question> questionList;
     int currentQuestionIndex = 0;
     int score = 0;
     int correctCount = 0;
     int incorrectCount = 0;
-    boolean answered = false;
+    boolean isAnswerSubmitted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,98 +32,112 @@ public class QuizActivity extends AppCompatActivity {
 
         tvQuestionCounter = findViewById(R.id.tvQuestionCounter);
         tvQuestionText = findViewById(R.id.tvQuestionText);
+        radioGroupOptions = findViewById(R.id.radioGroupOptions);
 
-        optionButtons[0] = findViewById(R.id.btnOption0);
-        optionButtons[1] = findViewById(R.id.btnOption1);
-        optionButtons[2] = findViewById(R.id.btnOption2);
-        optionButtons[3] = findViewById(R.id.btnOption3);
+        radioButtons[0] = findViewById(R.id.rbOption0);
+        radioButtons[1] = findViewById(R.id.rbOption1);
+        radioButtons[2] = findViewById(R.id.rbOption2);
+        radioButtons[3] = findViewById(R.id.rbOption3);
 
-        btnNext = findViewById(R.id.btnNext);
+        btnSubmitNext = findViewById(R.id.btnSubmitNext);
 
         // Load shuffled questions
         questionList = QuestionBank.getQuestions();
         loadQuestion();
 
-        // Set click listeners for the 4 option buttons
-        for (int i = 0; i < optionButtons.length; i++) {
-            final int optionIndex = i;
-            optionButtons[i].setOnClickListener(v -> {
-                if (!answered) {
-                    checkAnswer(optionIndex);
+        btnSubmitNext.setOnClickListener(v -> {
+            if (!isAnswerSubmitted) {
+                // Step 1: Validate that an option is selected
+                int selectedId = radioGroupOptions.getCheckedRadioButtonId();
+                if (selectedId == -1) {
+                    Toast.makeText(QuizActivity.this, "Please select an option", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-            });
-        }
 
-        // Handle Next button click
-        btnNext.setOnClickListener(v -> {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questionList.size()) {
-                loadQuestion();
+                // Find index of selected radio button
+                int selectedIndex = -1;
+                for (int i = 0; i < radioButtons.length; i++) {
+                    if (radioButtons[i].getId() == selectedId) {
+                        selectedIndex = i;
+                        break;
+                    }
+                }
+
+                checkAnswer(selectedIndex);
+
             } else {
-                // Quiz completed, transition to ResultActivity
-                Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
-                intent.putExtra("SCORE", score);
-                intent.putExtra("CORRECT", correctCount);
-                intent.putExtra("INCORRECT", incorrectCount);
-                startActivity(intent);
-                finish();
+                // Step 2: Advance to next question or results
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questionList.size()) {
+                    loadQuestion();
+                } else {
+                    // Navigate to ResultActivity
+                    Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
+                    intent.putExtra("SCORE", score);
+                    intent.putExtra("CORRECT", correctCount);
+                    intent.putExtra("INCORRECT", incorrectCount);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
     }
 
     private void loadQuestion() {
-        // Reset states for the new question
-        answered = false;
-        btnNext.setEnabled(false);
-        resetButtonColors();
+        isAnswerSubmitted = false;
+        radioGroupOptions.clearCheck();
+        btnSubmitNext.setText("Submit Answer");
+        resetRadioButtonStyles();
 
         Question currentQuestion = questionList.get(currentQuestionIndex);
 
-        // Update counter and question text
+        // Update counter and text
         tvQuestionCounter.setText("Question " + (currentQuestionIndex + 1) + " of " + questionList.size());
         tvQuestionText.setText(currentQuestion.getQuestionText());
 
-        // Populate option texts
+        // Set radio button option texts
         String[] options = currentQuestion.getOptions();
-        for (int i = 0; i < optionButtons.length; i++) {
-            optionButtons[i].setText(options[i]);
+        for (int i = 0; i < radioButtons.length; i++) {
+            radioButtons[i].setText(options[i]);
         }
     }
 
-    private void checkAnswer(int selectedOptionIndex) {
-        answered = true;
+    private void checkAnswer(int selectedIndex) {
+        isAnswerSubmitted = true;
         Question currentQuestion = questionList.get(currentQuestionIndex);
         int correctIndex = currentQuestion.getCorrectOptionIndex();
 
-        if (selectedOptionIndex == correctIndex) {
-            // Correct answer
-            score += 10; // 10 points per question
+        if (selectedIndex == correctIndex) {
+            score += 10;
             correctCount++;
-            optionButtons[selectedOptionIndex].setBackgroundColor(Color.parseColor("#4CAF50")); // Green
+            radioButtons[selectedIndex].setTextColor(Color.parseColor("#4CAF50")); // Green
         } else {
-            // Wrong answer
             incorrectCount++;
-            optionButtons[selectedOptionIndex].setBackgroundColor(Color.parseColor("#F44336")); // Red
-            // Highlight the correct option in green so the user learns
-            optionButtons[correctIndex].setBackgroundColor(Color.parseColor("#4CAF50"));
+            radioButtons[selectedIndex].setTextColor(Color.parseColor("#F44336")); // Red
+            radioButtons[correctIndex].setTextColor(Color.parseColor("#4CAF50")); // Show correct answer in green
         }
 
-        // Disable options so user can't change answer
-        for (Button btn : optionButtons) {
-            btn.setEnabled(false);
-        }
+        // Disable options after submission
+        setRadioButtonsEnabled(false);
 
-        // Enable Next or finish button
-        btnNext.setEnabled(true);
+        // Update button text for next step
         if (currentQuestionIndex == questionList.size() - 1) {
-            btnNext.setText("Finish Quiz");
+            btnSubmitNext.setText("Finish Quiz");
+        } else {
+            btnSubmitNext.setText("Next Question");
         }
     }
 
-    private void resetButtonColors() {
-        for (Button btn : optionButtons) {
-            btn.setBackgroundColor(Color.parseColor("#6200EE")); // Default primary purple tint (or standard button color)
-            btn.setEnabled(true);
+    private void resetRadioButtonStyles() {
+        for (RadioButton rb : radioButtons) {
+            rb.setEnabled(true);
+            rb.setTextColor(Color.parseColor("#000000")); // Reset text color to default black/theme color
+        }
+    }
+
+    private void setRadioButtonsEnabled(boolean enabled) {
+        for (RadioButton rb : radioButtons) {
+            rb.setEnabled(enabled);
         }
     }
 }
